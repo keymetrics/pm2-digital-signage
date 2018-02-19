@@ -1,0 +1,24 @@
+{
+  "name": "pm2-digital-signage",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/keymetrics/pm2-digital-signage.git"
+  },
+  "author": "Keymetrics",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/keymetrics/pm2-digital-signage/issues"
+  },
+  "homepage": "https://github.com/keymetrics/pm2-digital-signage#readme",
+  "dependencies": {
+    "active-win": "^3.0.0",
+    "pmx": "^1.6.4",
+    "systeminformation": "git+https://github.com/ItsJimi/systeminformation.git"
+  }
+}
