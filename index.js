@@ -1,6 +1,7 @@
 const pmx = require('pmx')
 
 const stats = require('./stats.js')
+const actions = require('./actions.js')
 
 pmx.initModule({
   widget: {
@@ -17,6 +18,8 @@ pmx.initModule({
 }, () => {
   stats.init()
   stats.update()
+
+  actions.init()
 
   setInterval(() => {
     return stats.update()
