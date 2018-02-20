@@ -2,6 +2,13 @@ const pmx = require('pmx')
 const activeWin = require('active-win')
 const si = require('systeminformation')
 
+let mouse
+try {
+  mouse = require('win-mouse')()
+} catch (e) {
+  console.log(e)
+}
+
 const Probe = pmx.probe()
 
 let metrics
@@ -28,17 +35,45 @@ exports.init = () => {
       name: 'CPU',
       value: 'N/A'
     }),
+    cpuUsed: Probe.metric({
+      name: 'CPU used',
+      value: 'N/A',
+      unit: '%',
+      alert: {
+        mode: 'threshold-avg',
+        value: 90,
+        cmp: '>'
+      }
+    }),
     cpuTemp: Probe.metric({
-      name: 'CPU Temp',
-      value: 'N/A'
+      name: 'CPU temp',
+      value: 'N/A',
+      unit: 'degC',
+      alert: {
+        mode: 'threshold-avg',
+        value: 70,
+        cmp: '>'
+      }
     }),
     ramUsed: Probe.metric({
       name: 'RAM used',
-      value: 'N/A'
+      value: 'N/A',
+      unit: '%',
+      alert: {
+        mode: 'threshold-avg',
+        value: 10,
+        cmp: '<'
+      }
     }),
     diskUsed: Probe.metric({
       name: 'Disk used',
-      value: 'N/A'
+      value: 'N/A',
+      unit: '%',
+      alert: {
+        mode: 'threshold-avg',
+        value: 10,
+        cmp: '<'
+      }
     }),
     networkRx: Probe.metric({
       name: 'Network rx'
@@ -49,6 +84,15 @@ exports.init = () => {
     os: Probe.metric({
       name: 'Operating system',
       value: 'N/A'
+    })
+  }
+
+  if (mouse) {
+    metrics.mouseMove = Probe.meter({
+      name: 'mvs/min'
+    })
+    mouse.on('move', (x, y) => {
+      metrics.mouseMove.mark()
     })
   }
 }
@@ -70,8 +114,11 @@ exports.update = () => {
   si.cpu().then(data => {
     metrics.cpu.set(`${data.manufacturer} ${data.brand} ${data.speed}`)
   })
+  si.currentLoad().then(data => {
+    metrics.cpuUsed.set(data.currentload.toFixed(2) + '%')
+  })
   si.cpuTemperature().then(data => {
-    metrics.cpuTemp.set(data.main + ' degC')
+    metrics.cpuTemp.set(data.main + ' C')
   })
   si.mem().then(data => {
     metrics.ramUsed.set(((data.used / data.total) * 100).toFixed(2) + '%')

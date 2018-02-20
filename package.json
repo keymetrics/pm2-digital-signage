@@ -20,5 +20,8 @@
     "active-win": "^3.0.0",
     "pmx": "^1.6.4",
     "systeminformation": "git+https://github.com/ItsJimi/systeminformation.git"
+  },
+  "optionalDependencies": {
+    "win-mouse": "latest"
   }
 }
