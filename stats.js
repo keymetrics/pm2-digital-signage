@@ -39,6 +39,16 @@ exports.init = () => {
     diskUsed: Probe.metric({
       name: 'Disk used',
       value: 'N/A'
+    }),
+    networkRx: Probe.metric({
+      name: 'Network rx'
+    }),
+    networkTx: Probe.metric({
+      name: 'Network tx'
+    }),
+    os: Probe.metric({
+      name: 'Operating system',
+      value: 'N/A'
     })
   }
 }
@@ -53,7 +63,7 @@ exports.update = () => {
     }
   })
 
-  metrics.uptime.set(si.time().uptime)
+  metrics.uptime.set(si.time().uptime.toFixed(0))
   si.system().then(data => {
     metrics.motherboard.set(`${data.manufacturer} ${data.model} ${data.version}`)
   })
@@ -70,4 +80,13 @@ exports.update = () => {
     let d = data[0]
     metrics.diskUsed.set((d.use).toFixed(2) + '%')
   })
+  si.networkInterfaceDefault().then(iface => {
+    si.networkStats(iface).then(data => {
+      metrics.networkRx.set(`${(data.rx_sec / 1024).toFixed(2)} kb/s`)
+      metrics.networkTx.set(`${(data.tx_sec / 1024).toFixed(2)} kb/s`)
+    })
+  })
+  si.osInfo().then(data => [
+    metrics.os.set(`${data.distro} ${data.release}`)
+  ])
 }
