@@ -1,4 +1,4 @@
-const pmx = require('pmx')
+const pmx = require('@pm2/io')
 
 const stats = require('./stats.js')
 const actions = require('./actions.js')

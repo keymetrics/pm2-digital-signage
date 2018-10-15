@@ -1,4 +1,4 @@
-const pmx = require('pmx')
+const pmx = require('@pm2/io')
 const activeWin = require('active-win')
 const si = require('systeminformation')
 
@@ -99,11 +99,11 @@ exports.init = () => {
 
 exports.update = () => {
   activeWin().then(data => {
-    metrics.activeTitle.set(data.title);
+    metrics.activeTitle.set(data.title)
     if (data.owner) {
-      metrics.activeProc.set(data.owner.name);
+      metrics.activeProc.set(data.owner.name)
     } else {
-      metrics.activeProc.set('❌');
+      metrics.activeProc.set('❌')
     }
   })
 

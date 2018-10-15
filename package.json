@@ -18,7 +18,7 @@
   "homepage": "https://github.com/keymetrics/pm2-digital-signage#readme",
   "dependencies": {
     "active-win": "^3.0.0",
-    "pmx": "^1.6.4",
+    "@pm2/io": "^2.4.1",
     "systeminformation": "git+https://github.com/ItsJimi/systeminformation.git"
   },
   "optionalDependencies": {

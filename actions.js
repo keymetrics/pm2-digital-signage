@@ -1,4 +1,4 @@
-const pmx = require('pmx')
+const pmx = require('@pm2/io')
 const activeWin = require('active-win')
 const { exec } = require('child_process')
 const si = require('systeminformation')
