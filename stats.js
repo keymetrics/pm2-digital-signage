@@ -9,33 +9,31 @@ try {
   console.log(e)
 }
 
-const Probe = pmx.probe()
-
 let metrics
 
 exports.init = () => {
   metrics = {
-    activeTitle: Probe.metric({
+    activeTitle: pmx.metric({
       name: 'Active title',
       value: 'N/A'
     }),
-    activeProc: Probe.metric({
+    activeProc: pmx.metric({
       name: 'Active process',
       value: 'N/A'
     }),
-    uptime: Probe.metric({
+    uptime: pmx.metric({
       name: 'Uptime',
       value: 0
     }),
-    motherboard: Probe.metric({
+    motherboard: pmx.metric({
       name: 'Motherboard',
       value: 'N/A'
     }),
-    cpu: Probe.metric({
+    cpu: pmx.metric({
       name: 'CPU',
       value: 'N/A'
     }),
-    cpuUsed: Probe.metric({
+    cpuUsed: pmx.metric({
       name: 'CPU used',
       value: 'N/A',
       unit: '%',
@@ -45,7 +43,7 @@ exports.init = () => {
         cmp: '>'
       }
     }),
-    cpuTemp: Probe.metric({
+    cpuTemp: pmx.metric({
       name: 'CPU temp',
       value: 'N/A',
       unit: 'degC',
@@ -55,7 +53,7 @@ exports.init = () => {
         cmp: '>'
       }
     }),
-    ramUsed: Probe.metric({
+    ramUsed: pmx.metric({
       name: 'RAM used',
       value: 'N/A',
       unit: '%',
@@ -65,7 +63,7 @@ exports.init = () => {
         cmp: '<'
       }
     }),
-    diskUsed: Probe.metric({
+    diskUsed: pmx.metric({
       name: 'Disk used',
       value: 'N/A',
       unit: '%',
@@ -75,20 +73,20 @@ exports.init = () => {
         cmp: '<'
       }
     }),
-    networkRx: Probe.metric({
+    networkRx: pmx.metric({
       name: 'Network rx'
     }),
-    networkTx: Probe.metric({
+    networkTx: pmx.metric({
       name: 'Network tx'
     }),
-    os: Probe.metric({
+    os: pmx.metric({
       name: 'Operating system',
       value: 'N/A'
     })
   }
 
   if (mouse) {
-    metrics.mouseMove = Probe.meter({
+    metrics.mouseMove = pmx.meter({
       name: 'mvs/min'
     })
     mouse.on('move', (x, y) => {
@@ -97,7 +95,7 @@ exports.init = () => {
   }
 }
 
-exports.update = () => {
+exports.updateActiveWindow = () => {
   activeWin().then(data => {
     metrics.activeTitle.set(data.title)
     if (data.owner) {
@@ -106,7 +104,9 @@ exports.update = () => {
       metrics.activeProc.set('❌')
     }
   })
+}
 
+exports.updateSystemMetrics = () => {
   metrics.uptime.set(si.time().uptime.toFixed(0))
   si.system().then(data => {
     metrics.motherboard.set(`${data.manufacturer} ${data.model} ${data.version}`)

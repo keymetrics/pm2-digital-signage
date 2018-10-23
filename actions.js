@@ -1,28 +1,20 @@
 const pmx = require('@pm2/io')
 const activeWin = require('active-win')
 const { exec } = require('child_process')
-const si = require('systeminformation')
-
-const Action = pmx.action
 
 exports.init = () => {
-  Action('killCurrent', reply => {
+  pmx.action('killCurrent', reply => {
     exports.killCurrent(reply)
   })
-  Action('listProcesses', reply => {
+  pmx.action('listProcesses', reply => {
     exports.listProcesses(reply)
-  })
-  Action('getStaticData', reply => {
-    si.getStaticData().then(data => {
-      reply(data)
-    })
   })
 }
 
 exports.killCurrent = cb => {
   activeWin().then(data => {
-    console.log(data)
     if (!data.owner) return cb({ err: 'No active process' })
+
     let cmd
     if (process.platform === 'win32') {
       cmd = `taskkill /IM ${data.owner.name} /F`
@@ -32,7 +24,7 @@ exports.killCurrent = cb => {
     exec(cmd, {
       windowsHide: true
     }, (err, stdout, stderr) => {
-      if (err) return cb({ err })
+      if (err) return cb({ err, stdout, stderr })
       cb({ stdout, stderr })
     })
   })
@@ -40,7 +32,7 @@ exports.killCurrent = cb => {
 
 exports.listProcesses = cb => {
   let cmd = 'ps -A'
-  if (process.platform == 'win32') cmd = 'tasklist'
+  if (process.platform === 'win32') cmd = 'tasklist'
   exec(cmd, {
     windowsHide: true
   }, (err, stdout, stderr) => {
